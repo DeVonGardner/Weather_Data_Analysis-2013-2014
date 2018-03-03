@@ -1,0 +1,193 @@
+---
+title: "Untitled"
+author: "DeVon Marquette Gardner"
+date: "3/2/2018"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## R Markdown
+
+This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+
+When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
+
+```{r cars}
+summary(cars)
+```
+
+## Including Plots
+
+You can also embed plots, for example:
+
+```{r pressure, echo=FALSE}
+plot(pressure)
+```
+
+Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(ggplot2)
+library(plyr)
+```
+```{r}
+drugs2005 = read.csv("drugs2005.csv")
+drugs2006 = read.csv("drugs2006.csv")
+drugs2007 = read.csv("drugs2007.csv")
+drugs2008 = read.csv("drugs2008.csv")
+drugs2009 = read.csv("drugs2009.csv")
+drugs2010 = read.csv("drugs2010.csv")
+drugs2011 = read.csv("drugs2011.csv")
+drugs2012 = read.csv("drugs2012.csv")
+drugs2013 = read.csv("drugs2013.csv")
+drugs2014 = read.csv("drugs2014.csv")
+
+```
+```{r}
+myvars =c("COCYR", "HERYR", "OXYYR", "MTHYR", "CATAG7", "IRSEX", "INCOME", "EDUCCAT2")
+sub2005= drugs2005[myvars]
+sub2006= drugs2006[myvars]
+sub2007= drugs2007[myvars]
+sub2008= drugs2008[myvars]
+sub2009= drugs2009[myvars]
+sub2010= drugs2010[myvars]
+sub2011= drugs2011[myvars]
+sub2012= drugs2012[myvars]
+sub2013= drugs2013[myvars]
+sub2014= drugs2014[myvars]
+```
+```{r}
+sub2005$Year = 2005
+sub2006$Year = 2006
+sub2007$Year = 2007
+sub2008$Year = 2008
+sub2009$Year = 2009
+sub2010$Year = 2010
+sub2011$Year = 2011
+sub2012$Year = 2012
+sub2013$Year = 2013
+sub2014$Year = 2014
+```
+
+```{r}
+sub05_14 = rbind(sub2005, sub2006, sub2007, sub2008, sub2009,
+sub2010, sub2011, sub2012, sub2013, sub2014)
+```
+
+```{r}
+sub05_14 = rename(sub05_14, c ("COCYR" = "Cocaine"))
+sub05_14 = rename(sub05_14, c ("HERYR" = "Heroin"))
+sub05_14 = rename(sub05_14, c ("OXYYR" = "Oxycotin"))
+sub05_14 = rename(sub05_14, c ("MTHYR" = "Meth"))
+sub05_14 = rename(sub05_14, c ("CATAG7" = "Age"))
+sub05_14 = rename(sub05_14, c ("IRSEX" = "Sex"))
+sub05_14 = rename(sub05_14, c ("INCOME" = "Income"))
+sub05_14 = rename(sub05_14, c ("EDUCCAT2" = "Education"))
+```
+
+```{r}
+rm(sub2005, sub2006, sub2007, sub2008, sub2009, sub2010, sub2011, sub2012, sub2013, sub2014)
+rm(drugs2005, drugs2006, drugs2007, drugs2008, drugs2009, drugs2010, drugs2011, drugs2012, drugs2013, drugs2014)
+
+```
+##Introduction:
+Drug abuse has become one of the most prevalent problems throughout the country.  Not only does it affect the victim but the families and friends of that victim. Without action against drug abuse, we risk letting it proliferate into the generations to come. In order to rectify this widespread issue, we have gathered lots of data that may have connection with drug abuse and drug addiction. When this data is put together, it will create awareness of the severity of drug abuse. Some of the  questions that  we proceed to ask throughout our findings are where drug abuse begins, where it is most prevalent and what drug is frequently used. These findings will assist us in unearthing the major risks that come with drug abuse, solutions to drug abuse and the future of drug abuse.
+```{r}
+sub05_14$Sex = factor(sub05_14$Sex, levels = c(1,2), labels = c("Male", "Female"))
+sub05_14$Age = factor(sub05_14$Age, levels = c(1,2,3,4,5,6,7), labels = c("12-13", "14-15", "16-17", "18-20", "21-25", "26-34", "35+"))
+sub05_14$Income = factor(sub05_14$Income, levels =c(1,2,3,4), labels = c("Less than $20,000", "$20,000-$49,000", "$50,000-$74,999","$75,000"))
+sub05_14$Education = factor(sub05_14$Education, levels = c(1,2,3,4,5), labels = c("Less than high school", "High school graduate", "Some college", "College graduate", "12-17 Years Old"))
+```
+##Trends in Use of Cocaine in the United States between 2005 and 2014
+```{r}
+ggplot(sub05_14, aes(Year, Cocaine, color = Age)) +stat_summary(fun.y = mean, geom="line") + labs(title = "Cocaine use per year by Age") + xlim(2005, 2014)
+
+ggplot(sub05_14, aes(Year, Cocaine, color = Income)) +stat_summary(fun.y = mean, geom="line") + labs(title = "Cocaine use per year by Income") +xlim(2005, 2014)
+
+ggplot(sub05_14, aes(Year, Cocaine, color = Education)) +stat_summary(fun.y = mean, geom="line") + labs(title = "Cocaine use per year by Education")
+
+ggplot(sub05_14, aes(Year, Cocaine, color = Sex)) +stat_summary(fun.y = mean, geom="line") + labs(title = "Cocaine use per year by Sex")
+
+```
+The graphs here suggest that between 2005 and 2014, individuals tended to do less cocaine on average over the 10 year span. Whether we're comparing income, education, or sex, people did more cocaine throughout the year in 2005, which eventually declined through 2014. Overall, individuals with a lesser income and education tend to have a higher percentage of individuals using a drug throughout the 10 year span. The same can be said about males in comparison to females.
+
+##Summary
+Cocaine use looks like it has significantly decreased from 2005 to 2014. Over the past 10 years it looks like for all demographics cocaine usage is going down. In cocaine usage by age it looks like 18-20, and 21-25 year olds make up the largest cocaine usage and their cocaine usage is decreasing. In cocaine use by income, we see that the people with income less than 20,000 use the most cocaine and even they had a large drop in cocaine usage from 2015-2011. The next demographic we look at is the education and the people most likely to use it have an education less than high school and they dropped half their cocaine usage from 2005-2014. Cocaine use by gender the males use cocaine more than females, but over the 10 years cocaine usage in percentage has still dropped. Overall cocaine usage has been declining over the years of 20015-2014.
+
+##Trends in use of Heroin in the United States between 2005 and 2014
+```{r}
+ggplot(sub05_14, aes(Year, Heroin, color = Age)) +stat_summary(fun.y = mean, geom="line") + labs(title = "Heroin use per year by Age") + xlim(2005, 2014)
+
+ggplot(sub05_14, aes(Year, Heroin, color = Income)) +stat_summary(fun.y = mean, geom="line") + labs(title = "Heroin use per year by Income")
+
+ggplot(sub05_14, aes(Year, Heroin, color = Education)) +stat_summary(fun.y = mean, geom="line") + labs(title = "Heroin use per year by Education")
+
+ggplot(sub05_14, aes(Year, Heroin, color = Sex)) +stat_summary(fun.y = mean, geom="line") + labs(title = "Heroin use per year by Sex")
+```
+Contrary to Cocaine users, the graphs suggest that the number of individuals that used Heroin between 2005 and 2014 generally increased over the 10 year span. There seemed to be a spike in heroin use for individuals with less than a high school education from 2008-2009, and again from 2012-2013.
+
+##Summary
+While examining the heroine graph it looks like the usage of heroin is increasing. The 18-20 and 26-34 year olds have significantly increased in heroin usage. People with income less than 20,000 make up the most heroin users and from 2005-2014 the percentage of users basically doubled. The majority of heroin users have less than a high school education and they are steadily increasing over the 10 years. Males dominate the females in heroin usage, and over the years it seems like males usage is increasing at a faster pace than women. Overall the percentage heroin usage has been increasing from 20015-2014.
+
+##Trends in use of Oxycotin in the United States between 2005 and 2014
+```{r}
+ggplot(sub05_14, aes(Year, Oxycotin, color = Age)) +stat_summary(fun.y = mean, geom="line") + labs(title = "Oxycotin use per year by Age") + xlim(2005, 2014)
+
+ggplot(sub05_14, aes(Year, Oxycotin, color = Income)) +stat_summary(fun.y = mean, geom="line") + labs(title = "Oxycotin use per year by Income")
+
+ggplot(sub05_14, aes(Year, Oxycotin, color = Education)) +stat_summary(fun.y = mean, geom="line") + labs(title = "Oxycotin use per year by Education")
+
+ggplot(sub05_14, aes(Year, Oxycotin, color = Sex)) +stat_summary(fun.y = mean, geom="line") + labs(title = "Oxycotin use per year by Sex")
+```
+The trends in these graphs suggest that the number of individuals who used Oxycotin increased from 2005-2009, but then began to decrease between 2010-2014.
+
+##Summary
+Oxycontin in the graphs we see an increase in percentages then a huge decrease. For Age demographics we see the most usage in ages 16-25 and they had a huge increase in 2010 but has been decreasing since then. For income we see most oxycontin users have an income under 20,000. Then for education we see the majority of the percentage of people who use oxycontin have less than a high school education- some college and they hit a peak in 2009 and have been decreasing until 2014. It seems like male use oxycontin more than females, and they also hit the same peak in 2009 and now the usage is decreasing. Overall it seem like oxycontin users increased from 2005-2009 but then decreased until 2014.
+
+##Trends in Meth use in the United States between 2005 and 2014
+```{r}
+ggplot(sub05_14, aes(Year, Meth, color = Age)) +stat_summary(fun.y = mean, geom="line") + labs(title = "Meth use per year by Age") + xlim(2005, 2014)
+
+ggplot(sub05_14, aes(Year, Meth, color = Income)) +stat_summary(fun.y = mean, geom="line") + labs(title = "Meth use per year by Income")
+
+ggplot(sub05_14, aes(Year, Meth, color = Education)) +stat_summary(fun.y = mean, geom="line") + labs(title = "Meth use per year by Education")
+
+ggplot(sub05_14, aes(Year, Meth, color = Sex)) +stat_summary(fun.y = mean, geom="line") + labs(title = "Meth use per year by Sex")
+```
+The graphs suggest that individuals who used meth began to decrease starting in 2005. However, it seems that the number of people using meth began to incerase again around 2011.
+
+##Summary
+For meth users looking at the graphs it looked like the usage percentage has decreased for a little bit then started to increase. Most meth users are the age 18-25 and have an income of less than 20,000. The majority of meth users have an education below high school and the next most graduated from high school. It seems like meth users by gender is pretty similar but Male just slightly outweigh the female users. Overall the meth user percentage has been on the decline but in 2011 it looks like it has been slightly increasing.
+```{r}
+earliest <- subset(sub05_14, Year=="2005")
+latest <- subset(sub05_14, Year =="2014")
+t.test(earliest$Cocaine,latest$Cocaine, na.rm=TRUE)
+```
+In our t-test comparing the average use of Cocaine in 2005 and 2014, we found our t value to be 14.22. The degree of freedom is 105330. The mean value for Cocaine use in 2005 is 0.03441553 and the mean value for Cocaine use in 2014 is 0.0204990. Since our p-value is considerably less than .05 (2.2e-16), we can reject the null hypothesis(the true difference in means is equal to 0) and have substantial evidence to prove that the difference in means is statistically significant.
+```{r}
+earliest <- subset(sub05_14, Year=="2005")
+latest <- subset(sub05_14, Year =="2014")
+t.test(earliest$Heroin,latest$Heroin, na.rm=TRUE)
+```
+In our t-test comparing the average use of Heroin in 2005 and 2014, we found our t value to be -4.0265. The degree of freedom is 106400. The mean value for Heroin use in 2005 is 0.002861998 and the mean value for Heroin use in 2014 is 0.004306056. Since our p-value is considerably less than .05 (5.666e-05), we can reject the null hypothesis(the true difference in means is equal to 0) and have substantial evidence to prove that the difference in means is statistically significant.
+```{r}
+earliest <- subset(sub05_14, Year=="2005")
+latest <- subset(sub05_14, Year =="2014")
+t.test(earliest$Oxycotin,latest$Oxycotin, na.rm=TRUE)
+```
+In our t-test comparing the average use of Oxycotin in 2005 and 2014, we found our t value to be 7.123. The degree of freedom is 106230. The mean value for Oxycotin use in 2005 is 0.010607280 and the mean value for Oxycotin use in 2014 is 0.006658103. Since our p-value is considerably less than .05 (5.666e-05), we can reject the null hypothesis(the true difference in means is equal to 0) and have substantial evidence to prove that the difference in means is statistically significant.
+```{r}
+earliest <- subset(sub05_14, Year=="2005")
+latest <- subset(sub05_14, Year =="2014")
+t.test(earliest$Meth,latest$Meth, na.rm=TRUE)
+```
+In our t-test comparing the average use of Meth in 2005 and 2014, we found our t value to be 7.9613. The degree of freedom is 103250. The mean value for Meth use in 2005 is 0.008675432 and the mean value for Meth use in 2014 is 0.004776465. Since our p-value is considerably less than .05 (1.72e-15), we can reject the null hypothesis(the true difference in means is equal to 0) and have substantial evidence to prove that the difference in means is statistically significant.
+```{r}
+male = subset(sub05_14, Sex == "Male")
+female = subset(sub05_14, Sex == "Female")
+t.test(male$Heroin, female$Heroin, na.rm = TRUE)
+```
